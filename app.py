@@ -4,21 +4,12 @@ import os
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
-# Configuración de la base de datos desde variables de entorno (Render)
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_NAME = os.getenv("DB_NAME", "piero")
-DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "1234")
+# 🔹 Usamos la URL completa de la base de datos que Render provee
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def conectar_db():
     try:
-        conn = psycopg2.connect(
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=DB_HOST,
-            port=5432
-        )
+        conn = psycopg2.connect(DATABASE_URL, sslmode="require")
         return conn
     except psycopg2.Error as e:
         print("❌ Error al conectar a la base de datos:", e)
@@ -32,6 +23,7 @@ def crear_persona(dni, nombre, apellido, direccion, telefono):
         (dni, nombre, apellido, direccion, telefono)
     )
     conn.commit()
+    cursor.close()
     conn.close()
 
 
@@ -40,6 +32,7 @@ def obtener_registros():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM personas ORDER BY apellido")
     registros = cursor.fetchall()
+    cursor.close()
     conn.close()
     return registros
 
@@ -73,6 +66,7 @@ def eliminar_registro(dni):
     cursor = conn.cursor()
     cursor.execute("DELETE FROM personas WHERE dni = %s", (dni,))
     conn.commit()
+    cursor.close()
     conn.close()
     return redirect(url_for('administrar'))
 

@@ -13,39 +13,49 @@
     </style>
 </head>
 <body>
-    <h1 style="text-align:center;">📋 Lista de Personas Registradas</h1>
+    <h1 style="text-align:center;">📋 Lista de Personas Registradas (Demo)</h1>
 
-    {% if registros %}
-        <table>
-            <thead>
-                <tr>
-                    <th>DNI</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for persona in registros %}
-                <tr>
-                    <td>{{ persona[1] }}</td> <!-- dni -->
-                    <td>{{ persona[2] }}</td> <!-- nombre -->
-                    <td>{{ persona[3] }}</td> <!-- apellido -->
-                    <td>{{ persona[4] }}</td> <!-- direccion -->
-                    <td>{{ persona[5] }}</td> <!-- telefono -->
-                    <td><a href="{{ url_for('eliminar_registro', dni=persona[1]) }}">❌ Eliminar</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p style="text-align:center; color:gray;">⚠️ No hay registros en la base de datos</p>
-    {% endif %}
+    <table>
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>60779701</td>
+                <td>Piero</td>
+                <td>Cruzado</td>
+                <td>Trujillo</td>
+                <td>931245466</td>
+                <td><a href="#">❌ Eliminar</a></td>
+            </tr>
+            <tr>
+                <td>70845236</td>
+                <td>María</td>
+                <td>Lopez</td>
+                <td>Lima</td>
+                <td>987654321</td>
+                <td><a href="#">❌ Eliminar</a></td>
+            </tr>
+            <tr>
+                <td>50321478</td>
+                <td>Carlos</td>
+                <td>Ramirez</td>
+                <td>Arequipa</td>
+                <td>912345678</td>
+                <td><a href="#">❌ Eliminar</a></td>
+            </tr>
+        </tbody>
+    </table>
 
     <div style="text-align:center; margin-top:20px;">
-        <a href="{{ url_for('index') }}">⬅️ Volver</a>
+        <a href="/">⬅️ Volver</a>
     </div>
 </body>
 </html>

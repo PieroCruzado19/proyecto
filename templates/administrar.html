@@ -2,44 +2,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Personas</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Administrar Registros</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; }
+        table { border-collapse: collapse; width: 80%; margin: 20px auto; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background: #333; color: #fff; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        a { text-decoration: none; color: red; font-weight: bold; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Lista de Personas</h1>
-        <a href="/" class="administrar-link">← Volver al Registro</a>
-        <div class="separator"></div>
+    <h1 style="text-align:center;">📋 Lista de Personas Registradas</h1>
 
+    {% if registros %}
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>DNI</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Dirección</th>
                     <th>Teléfono</th>
-                    <th>Acciones</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
-                {% for p in personas %}
+                {% for persona in registros %}
                 <tr>
-                    <td>{{ p[0] }}</td>
-                    <td>{{ p[1] }}</td>
-                    <td>{{ p[2] }}</td>
-                    <td>{{ p[3] }}</td>
-                    <td>{{ p[4] }}</td>
-                    <td>{{ p[5] }}</td>
-                    <td>
-                        <a href="{{ url_for('eliminar', id=p[0]) }}" onclick="return confirm('¿Seguro de eliminar?')">Eliminar</a>
-                    </td>
+                    <td>{{ persona[0] }}</td>
+                    <td>{{ persona[1] }}</td>
+                    <td>{{ persona[2] }}</td>
+                    <td>{{ persona[3] }}</td>
+                    <td>{{ persona[4] }}</td>
+                    <td><a href="{{ url_for('eliminar_registro', dni=persona[0]) }}">❌ Eliminar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    {% else %}
+        <p style="text-align:center; color:gray;">⚠️ No hay registros en la base de datos</p>
+    {% endif %}
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{{ url_for('index') }}">⬅️ Volver</a>
     </div>
 </body>
 </html>

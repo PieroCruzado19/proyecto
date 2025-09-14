@@ -15,7 +15,8 @@ DB_PASSWORD = 'xkmD4V6rmoGNJ27uGLq1k76ynORQ8HTd'
 def conectar_db():
     try:
         conn = psycopg2.connect(
-            dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST)
+            dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST
+        )
         return conn
     except psycopg2.Error as e:
         print("Error al conectar a la base de datos:", e)
@@ -24,23 +25,28 @@ def conectar_db():
 def crear_persona(dni, nombre, apellido, direccion, telefono):
     conn = conectar_db()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO personas (dni, nombre, apellido, direccion, telefono) VALUES (%s, %s, %s, %s, %s)",
-                   (dni, nombre, apellido, direccion, telefono))
+    cursor.execute(
+        "INSERT INTO personas (dni, nombre, apellido, direccion, telefono) VALUES (%s, %s, %s, %s, %s)",
+        (dni, nombre, apellido, direccion, telefono)
+    )
     conn.commit()
     conn.close()
 
+
 def obtener_registros():
-    conn = psycopg2.connect(
-        dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST)
-    cursor=conn.cursor()
-    cursor.execute("SELECT * FROM personas order by apellido")
+    conn = conectar_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM personas ORDER BY apellido")
     registros = cursor.fetchall()
     conn.close()
     return registros
 
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    mensaje_confirmacion = request.args.get("mensaje_confirmacion")
+    return render_template('index.html', mensaje_confirmacion=mensaje_confirmacion)
+
 
 @app.route('/registrar', methods=['POST'])
 def registrar():
@@ -53,22 +59,24 @@ def registrar():
     mensaje_confirmacion = "Registro Exitoso"
     return redirect(url_for('index', mensaje_confirmacion=mensaje_confirmacion))
 
+
 @app.route('/administrar')
 def administrar():
-    registros=obtener_registros()
-    return render_template('administrar.html',registros=registros)
+    registros = obtener_registros()
+    return render_template('administrar.html', registros=registros)
 
-@app.route('/eliminar/<dni>', methods=['POST'])
+
+# 🔹 Ahora acepta GET para simplificar la eliminación
+@app.route('/eliminar/<dni>')
 def eliminar_registro(dni):
-    conn = psycopg2.connect(
-        dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST)
-    cursor=conn.cursor()
+    conn = conectar_db()
+    cursor = conn.cursor()
     cursor.execute("DELETE FROM personas WHERE dni = %s", (dni,))
     conn.commit()
     conn.close()
     return redirect(url_for('administrar'))
 
+
 if __name__ == '__main__':
-    #Esto es nuevo
-    port = int(os.environ.get('PORT',5000))    
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

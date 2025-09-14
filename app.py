@@ -1,11 +1,21 @@
 from flask import Flask, render_template, request, redirect, url_for
 import psycopg2
 import os
+from urllib.parse import urlparse
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
-# 🔹 Usamos la URL completa de la base de datos que Render provee
+# 🔹 Tomar la URL de conexión desde Render
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    print("⚠️ ERROR: No se encontró la variable DATABASE_URL en Render")
+else:
+    # Mostrar la URL (pero ocultar la contraseña en logs)
+    parsed = urlparse(DATABASE_URL)
+    safe_url = f"postgresql://{parsed.username}:*****@{parsed.hostname}:{parsed.port}/{parsed.path.lstrip('/')}"
+    print(f"✅ Conectando a la base de datos: {safe_url}")
+
 
 def conectar_db():
     try:
@@ -13,10 +23,13 @@ def conectar_db():
         return conn
     except psycopg2.Error as e:
         print("❌ Error al conectar a la base de datos:", e)
+        return None
 
 
 def crear_persona(dni, nombre, apellido, direccion, telefono):
     conn = conectar_db()
+    if not conn:
+        return
     cursor = conn.cursor()
     cursor.execute(
         "INSERT INTO personas (dni, nombre, apellido, direccion, telefono) VALUES (%s, %s, %s, %s, %s)",
@@ -29,6 +42,8 @@ def crear_persona(dni, nombre, apellido, direccion, telefono):
 
 def obtener_registros():
     conn = conectar_db()
+    if not conn:
+        return []
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM personas ORDER BY apellido")
     registros = cursor.fetchall()
@@ -63,6 +78,8 @@ def administrar():
 @app.route('/eliminar/<dni>')
 def eliminar_registro(dni):
     conn = conectar_db()
+    if not conn:
+        return redirect(url_for('administrar'))
     cursor = conn.cursor()
     cursor.execute("DELETE FROM personas WHERE dni = %s", (dni,))
     conn.commit()

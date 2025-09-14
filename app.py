@@ -1,25 +1,27 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask import jsonify
 import psycopg2
 import os
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
-# Configuración de la base de datos
-DB_HOST = 'dpg-cr6bdj1u0jms73bn1teg-a.oregon-postgres.render.com'
-DB_NAME = 'dbtest_h0hy'
-DB_USER = 'dbtest_h0hy_user'
-DB_PASSWORD = 'xkmD4V6rmoGNJ27uGLq1k76ynORQ8HTd'
-
+# Configuración de la base de datos desde variables de entorno (Render)
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_NAME = os.getenv("DB_NAME", "piero")
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "1234")
 
 def conectar_db():
     try:
         conn = psycopg2.connect(
-            dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=5432
         )
         return conn
     except psycopg2.Error as e:
-        print("Error al conectar a la base de datos:", e)
+        print("❌ Error al conectar a la base de datos:", e)
 
 
 def crear_persona(dni, nombre, apellido, direccion, telefono):
@@ -56,8 +58,7 @@ def registrar():
     direccion = request.form['direccion']
     telefono = request.form['telefono']
     crear_persona(dni, nombre, apellido, direccion, telefono)
-    mensaje_confirmacion = "Registro Exitoso"
-    return redirect(url_for('index', mensaje_confirmacion=mensaje_confirmacion))
+    return redirect(url_for('index', mensaje_confirmacion="✅ Registro Exitoso"))
 
 
 @app.route('/administrar')
@@ -66,7 +67,6 @@ def administrar():
     return render_template('administrar.html', registros=registros)
 
 
-# 🔹 Ahora acepta GET para simplificar la eliminación
 @app.route('/eliminar/<dni>')
 def eliminar_registro(dni):
     conn = conectar_db()

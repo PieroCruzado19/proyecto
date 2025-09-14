@@ -30,12 +30,12 @@
             <tbody>
                 {% for persona in registros %}
                 <tr>
-                    <td>{{ persona[0] }}</td>
-                    <td>{{ persona[1] }}</td>
-                    <td>{{ persona[2] }}</td>
-                    <td>{{ persona[3] }}</td>
-                    <td>{{ persona[4] }}</td>
-                    <td><a href="{{ url_for('eliminar_registro', dni=persona[0]) }}">❌ Eliminar</a></td>
+                    <td>{{ persona[1] }}</td> <!-- dni -->
+                    <td>{{ persona[2] }}</td> <!-- nombre -->
+                    <td>{{ persona[3] }}</td> <!-- apellido -->
+                    <td>{{ persona[4] }}</td> <!-- direccion -->
+                    <td>{{ persona[5] }}</td> <!-- telefono -->
+                    <td><a href="{{ url_for('eliminar_registro', dni=persona[1]) }}">❌ Eliminar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

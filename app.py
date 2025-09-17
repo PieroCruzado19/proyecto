@@ -7,7 +7,7 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 
 # 🔹 Configuración de base de datos directa
 DB_CONFIG = {
-    'host': 'dpg-d333e7bipnbc73dkvfvg-a.oregon-postgres.render.com',  # ← ESTO ES CRÍTICO
+    'host': 'dpg-d333e7bipnbc73dkvfvg-a',
     'database': 'piero',
     'user': 'piero_user',
     'password': 'zTU8IRNbGppbwlsZ3B9SoS22M6eW1RzN',
@@ -86,4 +86,8 @@ def eliminar_registro(dni):
     if request.method == 'GET':
         return '', 200  
     else:
-        return redirect(url_for('administrar'))  
+        return redirect(url_for('administrar'))
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)

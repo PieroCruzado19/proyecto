@@ -33,31 +33,8 @@
                 <label for="telefono">Teléfono:</label>
                 <input type="text" id="telefono" name="telefono">
             </div>
-            <button type="submit" onclick="mostrarMensaje()">Registrar</button>
+            <button type="submit">Registrar</button>
         </form>
     </div>
-
-    <!-- Modal para el mensaje de registro exitoso -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="cerrarMensaje()">&times;</span>
-            <p>¡Registro exitoso!</p>
-        </div>
-    </div>
-
-    <!-- Script para manejar el modal -->
-    <script>
-        function mostrarMensaje() {
-            var modal = document.getElementById('modal');
-            modal.style.display = 'block';
-        }
-
-        function cerrarMensaje() {
-            var modal = document.getElementById('modal');
-            modal.style.display = 'none';
-        }
-    </script>
 </body>
 </html>
-
-

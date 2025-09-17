@@ -69,18 +69,21 @@ def administrar():
     registros = obtener_registros()
     return render_template('administrar.html', registros=registros)
 
-@app.route('/eliminar/<dni>')
+@app.route('/eliminar/<dni>', methods=['GET', 'POST'])
 def eliminar_registro(dni):
     conn = conectar_db()
     if not conn:
+        if request.method == 'GET':
+            return '', 500
         return redirect(url_for('administrar'))
+    
     cursor = conn.cursor()
     cursor.execute("DELETE FROM personas WHERE dni = %s", (dni,))
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('administrar'))
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    
+    if request.method == 'GET':
+        return '', 200  
+    else:
+        return redirect(url_for('administrar'))  

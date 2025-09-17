@@ -9,7 +9,8 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
         th { background: #333; color: #fff; }
         tr:nth-child(even) { background: #f9f9f9; }
-        a { text-decoration: none; color: red; font-weight: bold; }
+        .btn-eliminar { background: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+        .btn-eliminar:hover { background: darkred; }
     </style>
 </head>
 <body>
@@ -28,13 +29,17 @@
         </thead>
         <tbody>
             {% for registro in registros %}
-            <tr>
+            <tr id="fila-{{ registro[0] }}">
                 <td>{{ registro[0] }}</td>
                 <td>{{ registro[1] }}</td>
                 <td>{{ registro[2] }}</td>
                 <td>{{ registro[3] }}</td>
                 <td>{{ registro[4] }}</td>
-                <td><a href="/eliminar/{{ registro[0] }}">❌ Eliminar</a></td>
+                <td>
+                    <button class="btn-eliminar" onclick="eliminarPersona('{{ registro[0] }}')">
+                        ❌ Eliminar
+                    </button>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -43,5 +48,25 @@
     <div style="text-align:center; margin-top:20px;">
         <a href="/">⬅️ Volver</a>
     </div>
+
+    <script>
+        function eliminarPersona(dni) {
+            if (confirm('¿Estás seguro de eliminar este registro?')) {
+                fetch(`/eliminar/${dni}`)
+                    .then(response => {
+                        if (response.ok) {
+                            document.getElementById(`fila-${dni}`).remove();
+                            alert('Registro eliminado exitosamente');
+                        } else {
+                            alert('Error al eliminar el registro');
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error de conexión');
+                        console.error('Error:', error);
+                    });
+            }
+        }
+    </script>
 </body>
 </html>

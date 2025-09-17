@@ -7,7 +7,7 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 
 # 🔹 Configuración de base de datos directa
 DB_CONFIG = {
-    'host': 'dpg-d333e7bipnbc73dkvfvg-a',
+    'host': 'dpg-d333e7bipnbc73dkvfvg-a.oregon-postgres.render.com',  # ← ESTO ES CRÍTICO
     'database': 'piero',
     'user': 'piero_user',
     'password': 'zTU8IRNbGppbwlsZ3B9SoS22M6eW1RzN',
